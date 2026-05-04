@@ -1,0 +1,33 @@
+Stress is a common response to pressure. It affects sleep, focus, and emotional well-being. To manage stress, try deep breathing, regular exercise, talking to someone, or taking short breaks.
+
+Sadness is a normal human emotion. When someone feels sad, active listening and empathy are very important. Offer support, validate their feelings, and suggest talking to a friend or professional if sadness persists.
+
+Anger often arises from frustration, injustice, or hurt. To calm anger, pause and take deep breaths, count to ten, and try to understand the root cause before responding.
+
+Happiness and positive emotions improve communication, productivity, and relationships. Practice gratitude, positive reinforcement, and celebrate small wins to maintain a positive mindset.
+
+Anxiety is common during exams, interviews, or social situations. Grounding techniques (like 5-4-3-2-1 method), deep breathing, and realistic thinking help reduce anxiety.
+
+Empathy builds user trust and satisfaction. Always validate the user's emotion first (e.g., "I understand you're upset"), then offer a solution or support.
+
+Depression signs include low energy, loss of interest in activities, changes in sleep or appetite, and feelings of hopelessness. Encourage seeking professional help if symptoms last more than two weeks.
+
+Intent detection guidelines: if user says "help", "support", "assist" → Help Request. If "problem", "issue", "not working", "broken" → Complaint. If "how", "what", "why", "when", "where" → Question. If "good", "great", "awesome", "love it" → Feedback. Otherwise → General.
+
+Multimodal emotion analysis combines facial expressions (happy, sad, angry, surprise, fear, disgust, neutral), voice tone (pitch, energy, pace), and text sentiment (positive, negative, neutral) to get a complete emotional picture.
+
+RAG (Retrieval-Augmented Generation) retrieves relevant information from a knowledge base and adds it to the prompt before generating a response. This reduces hallucinations and makes answers more factual and helpful.
+
+When a user greets with "hello", "hi", "hey", respond warmly. When they say "thank you", say "you're welcome". If the user is abusive, stay calm, do not argue, and offer help or ask to rephrase.
+
+Face detection fails if the image is too dark, face is tilted, or occluded (mask, glasses). Suggest better lighting, front-facing, and clear face for accurate emotion recognition.
+
+Voice emotion detection works better with clear, short audio (less than 10 seconds). Background noise reduces accuracy. Supported formats: WAV, MP3. For best results, speak directly into the microphone.
+
+Sentiment analysis models like Hugging Face transformers can classify text as POSITIVE or NEGATIVE with a confidence score. Neutral sentiment is possible when words are factual without strong emotion.
+
+In customer support, handling negative emotions first with empathy then solving the problem reduces churn. Happy customers are more likely to give positive feedback and repeat business.
+
+If the user's text is empty or just "hi", ask clarifying questions like "How are you feeling today?" or "What would you like to talk about?".
+
+The AI response should be concise, kind, and helpful. Avoid overly long answers. If uncertain, say "I'm not sure, but let me try to help."

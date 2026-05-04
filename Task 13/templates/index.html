@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Multimodal AI Emotion Analyzer | Next‑gen Sentiment AI</title>
+    
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="main-container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <h1>🧠 Multimodal AI Analyzer</h1>
+        <p class="subtitle">Analyze emotions using text, image, webcam and real-time voice</p>
+
+        <form action="/analyze" method="POST" enctype="multipart/form-data">
+            <div class="input-box">
+                <label><i class="fas fa-comment-dots"></i> Enter Text</label>
+                <textarea name="text" id="text_area" placeholder="Type your thoughts or emotions here..."></textarea>
+            </div>
+
+            <div class="input-box">
+                <label><i class="fas fa-image"></i> Upload Image</label>
+                <input type="file" name="image">
+            </div>
+
+            <div class="input-box">
+                <label><i class="fas fa-music"></i> Upload Audio (Optional)</label>
+                <input type="file" name="audio">
+            </div>
+
+            <div class="input-box">
+                <label><i class="fas fa-video"></i> Live Webcam Emotion Detection</label>
+                <a href="/webcam">
+                    <button type="button" class="webcam-btn"><i class="fas fa-camera"></i> Start Webcam</button>
+                </a>
+            </div>
+
+            <div class="input-box">
+                <label><i class="fas fa-microphone-alt"></i> Real-Time Voice Input</label>
+                <button type="button" class="voice-btn" onclick="startVoiceRecognition()">
+                    <i class="fas fa-microphone"></i> Start Voice Input
+                </button>
+            </div>
+
+            <input type="hidden" name="voice_text" id="voice_text">
+            <button type="submit" class="analyze-btn"><i class="fas fa-brain"></i> Analyze Emotion</button>
+        </form>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <!-- Analysis Result Card (conditionally shown) -->
+        {% if sentiment %}
+        <div class="result-card">
+            <h2><i class="fas fa-chart-line"></i> AI Analysis Result</h2>
+            <div class="result-item">
+                <span><i class="fas fa-comment"></i> 📝 Text Sentiment</span>
+                <p>{{ sentiment }}</p>
+            </div>
+            <div class="result-item">
+                <span><i class="fas fa-bullseye"></i> 🎯 Intent Detection</span>
+                <p>{{ intent }}</p>
+            </div>
+            <div class="result-item">
+                <span><i class="fas fa-smile"></i> 😊 Image Emotion</span>
+                <p>{{ image_emotion }}</p>
+            </div>
+            <div class="result-item">
+                <span><i class="fas fa-microphone-alt"></i> 🎤 Voice Emotion</span>
+                <p>{{ voice_emotion }}</p>
+            </div>
+            <div class="result-item">
+                <span><i class="fas fa-robot"></i> 🤖 AI Response</span>
+                <p>{{ response }}</p>
+            </div>
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-bar"></i> 📈 Visual Insights</h3>
+                <img src="{{ chart_path }}" alt="chart">
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- HOW IT WORKS SECTION (always visible) -->
+        <div class="how-it-works">
+            <h3><i class="fas fa-info-circle"></i> How This AI Works</h3>
+            <p>This is a <strong>Multimodal Emotion Analysis System</strong> that understands you through:</p>
+            <ul>
+                <li><i class="fas fa-comment"></i> <strong>Text</strong> – Sentiment analysis (positive/negative) + Intent detection</li>
+                <li><i class="fas fa-image"></i> <strong>Image</strong> – Face emotion recognition (happy, sad, angry, fear, surprise, disgust, neutral)</li>
+                <li><i class="fas fa-microphone-alt"></i> <strong>Voice</strong> – Emotion from audio (happy, sad, angry, stressed, tired, neutral)</li>
+                <li><i class="fas fa-camera"></i> <strong>Webcam</strong> – Real‑time face emotion detection (same 7 emotions)</li>
+            </ul>
+            <p><strong>🧠 What is RAG (Retrieval-Augmented Generation)?</strong><br>
+            When you ask a factual question (e.g., "what is stress?"), the AI first searches its internal knowledge base (<code>knowledge_base.txt</code>) for the most relevant information. It then uses that to generate a precise, helpful answer – instead of making things up. This makes the AI smarter and more reliable.</p>
+            <p class="try-prompt">🚀 <strong>Try asking:</strong> "what is stress?", "how to calm anger?", or upload a sad/happy image. The system also detects tired, stressed, anxious, and more from voice!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function startVoiceRecognition() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech Recognition not supported in this browser");
+            return;
+        }
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.start();
+        alert("Listening... Speak now");
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById("voice_text").value = transcript;
+            document.getElementById("text_area").value = transcript;
+            alert("Voice Captured: " + transcript);
+        };
+        recognition.onerror = function(event) {
+            alert("Voice Error: " + event.error);
+        };
+    }
+</script>
+</body>
+</html>
