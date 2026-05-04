@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Information Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-content">
+                <span class="bot-icon">🛍️</span>
+                <h2>Shopping Information Assistant</h2>
+                <span class="status">● Online</span>
+            </div>
+            <p class="tagline">Products, Prices, Brands & Availability (No Cart)</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-content">
+                    Assalam u Alaikum! I can help you find products, check prices, and compare brands. Type 'help' to see commands.
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Ask me about products, prices, or brands..." autocomplete="off">
+                <button id="sendBtn">Send</button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" data-msg="help me find laptop">💻 Find Laptop</button>
+                <button class="quick-btn" data-msg="i need shoes">👟 Need Shoes</button>
+                <button class="quick-btn" data-msg="show smartphone">📱 Smartphones</button>
+                <button class="quick-btn" data-msg="list all brands">🏷️ All Brands</button>
+                <button class="quick-btn" data-msg="compare Apple and Samsung">🔍 Compare</button>
+                <button class="quick-btn" data-msg="help">❓ Help</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        function addMessage(message, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = message.replace(/\n/g, '<br>');
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.appendChild(contentDiv);
+            messageDiv.appendChild(timeDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<div class="message-content">🔍 Assistant is thinking<span>.</span><span>.</span><span>.</span></div>';
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+        
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            addMessage(message, true);
+            userInput.value = '';
+            showTypingIndicator();
+            
+            try {
+                const response = await fetch('/get_response', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+                removeTypingIndicator();
+                addMessage(data.response, false);
+            } catch (error) {
+                removeTypingIndicator();
+                addMessage('Error connecting to server. Please try again.', false);
+                console.error(error);
+            }
+        }
+        
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                userInput.value = btn.getAttribute('data-msg');
+                sendMessage();
+            });
+        });
+        
+        userInput.focus();
+    </script>
+</body>
+</html>
